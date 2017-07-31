@@ -1,5 +1,10 @@
 <template>
   <div id="app">
+    <el-row>
+      <el-menu theme="dark" default-active="1" mode="horizontal" router=true>
+        <el-menu-item index="test" class="home-menu-item">redpaper</el-menu-item>
+      </el-menu>
+    </el-row>
     <router-view></router-view>
   </div>
 </template>
@@ -16,5 +21,9 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #C0CCDA;
+}
+.home-menu-item{
+  font-weight: bold;
+  font-size: 175%;
 }
 </style>

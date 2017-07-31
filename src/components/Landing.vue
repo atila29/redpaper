@@ -1,21 +1,17 @@
 <template>
   <!-- Navbar -->
   <div class="landing">
-    <el-row>
-      <el-menu theme="dark" default-active="1" mode="horizontal" router=true>
-        <el-menu-item index="test" class="home-menu-item">redpaper</el-menu-item>
-      </el-menu>
-    </el-row>
+
     <!--  -->
     <!-- Scroller -->
     <div>
       <el-row type="flex" justify="space-around">
         <el-col :span="20">
-          <div v-for="item in list">
+          <div v-for="row in list">
             <el-row type="flex" justify="space-around">
-              <el-col :span="2" v-for="(o, index) in 10" :key="o">
+              <el-col :span="3" v-for="item in row" :key="o">
                 <el-card :body-style="{ padding: '0px'}" class="thumbnail-card">
-                  <img src="http://via.placeholder.com/200x200" class="image">
+                  <img v-bind:src="item.data.thumbnail" class="image">
                 </el-card>
               </el-col>
             </el-row>
@@ -30,23 +26,50 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
+import axios from 'axios'
 export default {
   name: 'landing',
   data () {
     return {
-      list: []
+      list: [],
+      after: ''
     }
   },
   methods: {
-    onInfinite () {
-      setTimeout(() => {
-        const temp = []
-        for (let i = this.list.length + 1; i <= this.list.length + 20; i++) {
-          temp.push(i)
-        }
+    onInfinite: function () {
+      let url = 'https://www.reddit.com/r/wallpapers/top/.json?q=linux&limit=21'
+      if (this.after === null) {
+        this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
+        return
+      }
+      if (this.after !== '') {
+        url = url.concat('&after=').concat(this.after)
+      }
+
+      axios.get(url)
+      .then(response => {
+        this.after = response.data.data.after
+        let index = 0
+        let count = 0
+        let temp = []
+        response.data.data.children.forEach(function (child) {
+          if (count === 7) {
+            index++
+            count = 0
+          }
+          if (count === 0) {
+            temp[index] = []
+          }
+          temp[index].push(child)
+          count++
+        })
+        console.log(this)
         this.list = this.list.concat(temp)
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
-      }, 1000)
+      })
+      .catch(function (error) {
+        console.log(error)
+      })
     }
   },
   components: {
@@ -56,10 +79,7 @@ export default {
 </script>
 
 <style scoped>
-  .home-menu-item{
-    font-weight: bold;
-    font-size: 175%;
-  }
+
   .time {
     font-size: 13px;
     color: #999;
