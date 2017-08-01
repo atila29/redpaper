@@ -9,9 +9,11 @@
         <el-col :span="20">
           <div v-for="row in list">
             <el-row type="flex" justify="space-around">
-              <el-col :span="3" v-for="item in row" :key="o">
+              <el-col :span="3" v-for="item in row" :key="item.data.id">
                 <el-card :body-style="{ padding: '0px'}" class="thumbnail-card">
-                  <img v-bind:src="item.data.thumbnail" class="image">
+                  <a v-bind:href="item.data.url">
+                    <img v-bind:src="item.data.thumbnail" class="image">
+                  </a>
                 </el-card>
               </el-col>
             </el-row>
@@ -27,6 +29,7 @@
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
 import axios from 'axios'
+
 export default {
   name: 'landing',
   data () {
@@ -37,7 +40,8 @@ export default {
   },
   methods: {
     onInfinite: function () {
-      let url = 'https://www.reddit.com/r/wallpapers/top/.json?q=linux&limit=21'
+      // 'https://www.reddit.com/r/wallpapers/top/.json?q=linux&limit=21'
+      let url = 'https://www.reddit.com/r/wallpaper/top/.json?sort=top&t=all&limit=21'
       if (this.after === null) {
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
         return
@@ -52,7 +56,7 @@ export default {
         let index = 0
         let count = 0
         let temp = []
-        response.data.data.children.forEach(function (child) {
+        response.data.data.children.forEach(child => {
           if (count === 7) {
             index++
             count = 0
@@ -63,11 +67,10 @@ export default {
           temp[index].push(child)
           count++
         })
-        console.log(this)
         this.list = this.list.concat(temp)
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error)
       })
     }
