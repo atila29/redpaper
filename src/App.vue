@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <el-row>
-      <el-menu theme="dark" default-active="1" mode="horizontal" router=true>
-        <el-menu-item index="test" class="home-menu-item">redpaper</el-menu-item>
+      <el-menu theme="dark" default-active="1" mode="horizontal" router>
+        <el-menu-item index="/" class="home-menu-item">redpaper</el-menu-item>
       </el-menu>
     </el-row>
     <router-view></router-view>
