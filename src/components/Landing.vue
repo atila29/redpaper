@@ -1,5 +1,5 @@
 <template>
-  <div class="landing">
+  <div class="landing" @keyup.enter="submit">
     <el-row type="flex" justify="center">
       <el-col :span="8">
         <el-row type="flex" justify="space-around">
@@ -13,8 +13,8 @@
         </el-row>
         <el-row type="flex" justify="center">
           <el-col :span="24">
-            <el-input placeholder="Please input" v-model="input">
-              <el-button slot="append" icon="search" @click="submit" @keyup.enter="submit"></el-button>
+            <el-input placeholder="Please input" v-model="input" autofocus>
+              <el-button slot="append" icon="search" @click="submit"></el-button>
             </el-input>
           </el-col>
         </el-row>
@@ -35,7 +35,10 @@ export default {
   },
   methods: {
     submit: function () {
-
+      this.$router.push({
+        name: 'search',
+        params: { q: this.input, type: 'top' }
+      })
     },
     hot: function () {
       console.log(this.$router)
