@@ -40,7 +40,8 @@ export default {
     onInfinite: async function () {
       // 'https://www.reddit.com/r/wallpapers/top/.json?q=linux&limit=21'
       let type = (typeof this.$route.params.type === 'undefined') ? 'top' : this.$route.params.type
-      let url = 'https://www.reddit.com/r/wallpaper/'.concat(type).concat('/.json?sort=top&t=all&limit=21')
+      let url = (typeof this.$route.params.q === 'undefined') ? 'https://www.reddit.com/r/wallpaper/'.concat(type).concat('/.json?sort=top&t=all&limit=21')
+      : 'https://www.reddit.com/r/wallpaper/search.json?q='.concat(this.$route.params.q).concat('&limit=21&restrict_sr=1')
       console.log(this.$route.params.type)
       if (this.after === null) {
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')

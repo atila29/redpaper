@@ -42,15 +42,15 @@ export default {
     },
     hot: function () {
       console.log(this.$router)
-      this.$router.push('search/hot')
+      this.$router.push('hot')
     },
     top: function () {
       console.log(this.$router)
-      this.$router.push('search/top')
+      this.$router.push('top')
     },
     newp: function () {
       console.log(this.$router)
-      this.$router.push('search/new')
+      this.$router.push('new')
     }
   }
 }
