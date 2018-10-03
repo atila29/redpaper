@@ -37,10 +37,11 @@ export default {
     }
   },
   methods: {
-    onInfinite: function () {
+    onInfinite: async function () {
       // 'https://www.reddit.com/r/wallpapers/top/.json?q=linux&limit=21'
       let type = (typeof this.$route.params.type === 'undefined') ? 'top' : this.$route.params.type
-      let url = 'https://www.reddit.com/r/wallpaper/'.concat(type).concat('/.json?sort=top&t=all&limit=21')
+      let url = (typeof this.$route.params.q === 'undefined') ? 'https://www.reddit.com/r/wallpaper/'.concat(type).concat('/.json?sort=top&t=all&limit=21')
+      : 'https://www.reddit.com/r/wallpaper/search.json?q='.concat(this.$route.params.q).concat('&limit=21&restrict_sr=1')
       console.log(this.$route.params.type)
       if (this.after === null) {
         this.$refs.infiniteLoading.$emit('$InfiniteLoading:complete')
@@ -49,30 +50,24 @@ export default {
       if (this.after !== '') {
         url = url.concat('&after=').concat(this.after)
       }
-
-      axios.get(url)
-      .then(response => {
-        this.after = response.data.data.after
-        let index = 0
-        let count = 0
-        let temp = []
-        response.data.data.children.forEach(child => {
-          if (count === 7) {
-            index++
-            count = 0
-          }
-          if (count === 0) {
-            temp[index] = []
-          }
-          temp[index].push(child)
-          count++
-        })
-        this.list = this.list.concat(temp)
-        this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
+      const response = await axios.get(url)
+      this.after = response.data.data.after
+      let index = 0
+      let count = 0
+      let temp = []
+      response.data.data.children.forEach(child => {
+        if (count === 7) {
+          index++
+          count = 0
+        }
+        if (count === 0) {
+          temp[index] = []
+        }
+        temp[index].push(child)
+        count++
       })
-      .catch(error => {
-        console.log(error)
-      })
+      this.list = this.list.concat(temp)
+      this.$refs.infiniteLoading.$emit('$InfiniteLoading:loaded')
     }
   },
   components: {
